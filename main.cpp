@@ -11,6 +11,8 @@ using namespace std;
 
 #include "flag_parsing.h"
 #include "image.h"
+#include "filter.h"
+#include "apply.h"
 
 int main(int argc, char* argv[]) {
 	char* inImage;
@@ -30,8 +32,10 @@ int main(int argc, char* argv[]) {
 
 	Image image = ImageIO::loadImage(inImage);
 
+	GausBlur blur = GausBlur(1);
+	
+	Image newImage = Apply::seq(image, blur);
 
-
-	ImageIO::writeImage(outImage, image);
+	ImageIO::writeImage(outImage, newImage);
 
 }

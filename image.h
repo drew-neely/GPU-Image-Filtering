@@ -1,3 +1,5 @@
+#ifndef IMAGE_H
+#define IMAGE_H
 
 #include <vector>
 #include <iostream>
@@ -34,6 +36,13 @@ struct Image {
 	vector<vector<Pixel>> data;
 	Image(unsigned int width, unsigned int height, vector<vector<Pixel>> data) :
 			width(width), height(height), data(data) {};
+	Image(unsigned int width, unsigned int height) :
+			width(width), height(height) {
+		data = vector<vector<Pixel>>(height);
+		for(int i = 0; i < height; i++) {
+			data[i] = vector<Pixel>(width);
+		}
+	};
 };
 
 
@@ -89,3 +98,5 @@ namespace ImageIO {
 		stbi_write_jpg(filename, image.width, image.height, 3, data, 100);
 	}
 };
+
+#endif

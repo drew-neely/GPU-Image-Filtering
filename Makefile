@@ -2,6 +2,12 @@ ifndef VERBOSE
 .SILENT:
 endif
 
+ifdef $(pic)
+	in := inputImages/$(pic).jpg
+	out := inputImages/$(pic).jpg
+endif
+
+
 cpp_files := $(wildcard *.cpp)
 h_files := $(wildcard *.h)
 cu_files := $(wildcard *.cu)
@@ -26,4 +32,4 @@ run: $(depends) ./bin/filter
 
 
 clean:
-	rm -rf kmeans *.o ./bin/*
+	rm -rf ./bin/* outputImages/*.jpg
