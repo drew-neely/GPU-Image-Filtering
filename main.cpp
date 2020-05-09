@@ -7,10 +7,10 @@
 #include <fstream>
 #include <chrono> 
 
-
 using namespace std;
 
 #include "flag_parsing.h"
+#include "image.h"
 
 int main(int argc, char* argv[]) {
 	char* inImage;
@@ -24,6 +24,14 @@ int main(int argc, char* argv[]) {
 		exit(1);
 	} 
 	if(outImage == nullptr) {
-		
+		fprintf(stderr, "No output specified\n");
+		exit(1);
 	}
+
+	Image image = ImageIO::loadImage(inImage);
+
+
+
+	ImageIO::writeImage(outImage, image);
+
 }

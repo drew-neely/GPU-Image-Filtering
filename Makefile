@@ -5,12 +5,12 @@ endif
 cpp_files := $(wildcard *.cpp)
 h_files := $(wildcard *.h)
 cu_files := $(wildcard *.cu)
+depends := $(cpp_files) $(h_files) $(cu_files)
 
 object_files := $(addprefix ./bin/, $(cpp_files:.cpp=.o) $(cu_files:.cu=.o))
 
-filter: ./bin/filter
 
-./bin/filter: $(cpp_files) $(h_files) $(cu_files)
+./bin/filter: $(depends)
 	g++ main.cpp -o ./bin/filter
 
 # ./bin/%.o : %.cpp
@@ -19,8 +19,9 @@ filter: ./bin/filter
 # ./bin/%.o : %.cu
 #     nvcc -dc $< -o $@
 
-run: ./bin/filter
-	./bin/filter
+run: $(depends) ./bin/filter
+	./bin/filter -in $(in) -out $(out)
+
 
 
 
