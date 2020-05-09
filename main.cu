@@ -10,8 +10,8 @@
 using namespace std;
 
 #include "flag_parsing.h"
-#include "image.h"
 #include "filter.h"
+#include "image.h"
 #include "apply.h"
 
 int main(int argc, char* argv[]) {

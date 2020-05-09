@@ -1,12 +1,19 @@
 ifndef VERBOSE
-.SILENT:
+# .SILENT:
 endif
 
-ifdef $(pic)
-	in := inputImages/$(pic).jpg
-	out := inputImages/$(pic).jpg
+ifdef pic
+in := inputImages/$(pic).jpg
+out := outputImages/$(pic).jpg
 endif
 
+ifdef in
+inCmd := -in $(in)
+endif
+
+ifdef out
+outCmd := -out $(out)
+endif
 
 cpp_files := $(wildcard *.cpp)
 h_files := $(wildcard *.h)
@@ -15,19 +22,21 @@ depends := $(cpp_files) $(h_files) $(cu_files)
 
 object_files := $(addprefix ./bin/, $(cpp_files:.cpp=.o) $(cu_files:.cu=.o))
 
+all: filter
 
-./bin/filter: $(depends)
-	g++ main.cpp -o ./bin/filter
+filter: ./bin/filter
 
-# ./bin/%.o : %.cpp
-# 	g++ -dc $< -o $@
+./bin/filter: $(object_files) $(h_files)
+	nvcc $(object_files) -o ./bin/filter
 
-# ./bin/%.o : %.cu
-#     nvcc -dc $< -o $@
+./bin/%.o : %.cu
+	nvcc -dc $< -o $@ -Xcudafe "--diag_suppress=set_but_not_used"
+
+./bin/%.o : %.cpp
+	nvcc -dc $< -o $@
 
 run: $(depends) ./bin/filter
-	./bin/filter -in $(in) -out $(out)
-
+	./bin/filter $(inCmd) $(outCmd)
 
 
 
