@@ -83,7 +83,7 @@ struct GausBlur : public Filter {
 		for(int y = cy - radius; y < cy + radius + 1; y++) {
 			for(int x = cx - radius; x < cx + radius + 1; x++) {
 				if(y >= 0 && y < image.height && x >= 0 && x < image.width) {
-					Pixel p = image.data[y][x];
+					Pixel p = image.get(x,y);
 					double k = kernel[y - (cy - radius)][x - (cx - radius)];
 					// printf("\tk = %f\n", k);
 					r += p.r * k;
@@ -97,7 +97,6 @@ struct GausBlur : public Filter {
 		g /= totalWeight;
 		b /= totalWeight;
 		Pixel newPixel = Pixel(round(r), round(g), round(b));
-		Pixel f = image.data[cy][cx];
 		return newPixel;
 
 	}

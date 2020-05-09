@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <iostream>
+#include <assert.h>
 
 using namespace std;
 
@@ -26,16 +27,23 @@ struct Pixel {
 struct Image {
 	unsigned int width;
 	unsigned int height;
-	vector<vector<Pixel>> data;
-	Image(unsigned int width, unsigned int height, vector<vector<Pixel>> data) :
+	vector<Pixel> data;
+
+	Pixel get(int x, int y) {
+		assert(x < width && y < height && x >= 0 && y >= 0);
+		return data[y * width + x];
+	}
+	
+	void set(Pixel &p, int x, int y) {
+		assert(x < width && y < height && x >= 0 && y >= 0);
+		data[y * width + x] = p;
+	}
+
+	Image(unsigned int width, unsigned int height, vector<Pixel> data) :
 			width(width), height(height), data(data) {};
+
 	Image(unsigned int width, unsigned int height) :
-			width(width), height(height) {
-		data = vector<vector<Pixel>>(height);
-		for(int i = 0; i < height; i++) {
-			data[i] = vector<Pixel>(width);
-		}
-	};
+			width(width), height(height), data(vector<Pixel>(width * height)) {};
 };
 
 

@@ -32,7 +32,7 @@ int main(int argc, char* argv[]) {
 
 	Image image = ImageIO::loadImage(inImage);
 
-	GausBlur blur = GausBlur(1);
+	GausBlur blur = GausBlur(4);
 	
 	Image newImage = Apply::seq(image, blur);
 

@@ -9,6 +9,7 @@ extern "C" {
 }
 
 #include "image.h"
+#include <assert.h>
 
 using namespace std;
 
@@ -22,18 +23,11 @@ Image ImageIO::loadImage(char* filename) {
 
 	if (data != nullptr && width > 0 && height > 0)
 	{
-		auto image = vector<vector<Pixel>>(height);
-		for(int y = 0; y < height; y++) {
-			auto row = vector<Pixel>(width);
-			for(int x = 0; x < width; x++) {
-				int i = (width * y + x) * n;
-				row[x].r = data[i];
-				row[x].g = data[i + 1];
-				row[x].b = data[i + 2];
-				// printf("(%d, %d) -- <%d, %d, %d>\n", x, y,
-				// 		data[i], data[i+1], data[i+2]);
-			}
-			image[y] = row;
+		auto image = vector<Pixel>(height * width);
+		for(int i = 0; i < width * height; i++) {
+			image[i].r = data[i*3];
+			image[i].g = data[i*3+1];
+			image[i].b = data[i*3+2];
 		}
 		stbi_image_free(data);
 
@@ -53,7 +47,7 @@ void ImageIO::writeImage(char* filename, Image &image) {
 	unsigned char data[image.width * image.height * 3];
 	for(int y = 0; y < image.height; y++) {
 		for(int x = 0; x < image.width; x++) {
-			Pixel p = image.data[y][x];
+			Pixel p = image.get(x, y);
 			int i = (image.width * y + x) * 3;
 			data[i  ] = p.r;
 			data[i+1] = p.g;
