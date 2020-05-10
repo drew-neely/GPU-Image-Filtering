@@ -32,8 +32,14 @@ all: filter
 
 filter: ./bin/filter
 
-./bin/filter: $(object_files) $(h_files)
+./bin/filter: $(object_files) $(h_files) bin/ outputImages/
 	nvcc $(object_files) -o ./bin/filter
+
+bin/ :
+	mkdir bin
+
+outputImages/ :
+	mkdir outputImages
 
 ./bin/%.o : %.cu
 	nvcc -dc $< -o $@ -Xcudafe "--diag_suppress=set_but_not_used"
