@@ -38,6 +38,7 @@ GausBlur::GausBlur(double strength, int radius) : Filter(1) {
 		this->radius = radius;
 		this->size = radius * 2 + 1;
 	}
+	printf("size %d\n", size);
 
 	// host_vector<double> kernelHV = host_vector<double>(size*size);
 	kernel = (double*) malloc(sizeof(double) * size * size);
