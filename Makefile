@@ -15,6 +15,12 @@ ifdef out
 outCmd := -out $(out)
 endif
 
+ifdef s
+sCmd := -s $(s)
+endif
+
+impl ?= seq
+
 cpp_files := $(wildcard *.cpp)
 h_files := $(wildcard *.h)
 cu_files := $(wildcard *.cu)
@@ -36,7 +42,7 @@ filter: ./bin/filter
 	nvcc -dc $< -o $@
 
 run: $(depends) ./bin/filter
-	./bin/filter $(inCmd) $(outCmd)
+	./bin/filter $(inCmd) $(outCmd) -impl $(impl) -f $(filter) $(sCmd)
 
 
 

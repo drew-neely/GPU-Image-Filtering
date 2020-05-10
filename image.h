@@ -4,17 +4,20 @@
 #include <vector>
 #include <iostream>
 #include <assert.h>
+#include <thrust/host_vector.h>
+#include <thrust/device_vector.h>
 
 using namespace std;
+using namespace thrust;
 
 struct Pixel {
 	unsigned char r;
 	unsigned char g;
 	unsigned char b;
-	
-	Pixel() {}
+	 
+	__host__ __device__ Pixel() {}
 
-	Pixel(unsigned char r, unsigned char g, unsigned char b) :
+	__host__ __device__ Pixel(unsigned char r, unsigned char g, unsigned char b) :
 			r(r), g(g), b(b) {};
 
 	char* toString() {
@@ -27,23 +30,46 @@ struct Pixel {
 struct Image {
 	unsigned int width;
 	unsigned int height;
-	vector<Pixel> data;
+	host_vector<Pixel> data;
+	device_vector<Pixel> deviceData;
+	bool primaryIsHost;
 
 	Pixel get(int x, int y) {
 		assert(x < width && y < height && x >= 0 && y >= 0);
-		return data[y * width + x];
+		if (primaryIsHost) {
+			return data[y * width + x];
+		} else {
+			return deviceData[y * width + x];
+		}
 	}
 	
 	void set(Pixel &p, int x, int y) {
 		assert(x < width && y < height && x >= 0 && y >= 0);
-		data[y * width + x] = p;
+		if(primaryIsHost) {
+			data[y * width + x] = p;
+		} else {
+			deviceData[y * width + x] = p;
+		}
 	}
 
+	void moveToDevice() {
+		deviceData = data;
+		primaryIsHost = false;
+	}
+
+	void moveToHost() {
+		data = deviceData;
+		primaryIsHost = true;
+	}
+
+	Image() {};
+
 	Image(unsigned int width, unsigned int height, vector<Pixel> data) :
-			width(width), height(height), data(data) {};
+			width(width), height(height), data(data), primaryIsHost(true) {};
 
 	Image(unsigned int width, unsigned int height) :
-			width(width), height(height), data(vector<Pixel>(width * height)) {};
+			width(width), height(height), data(host_vector<Pixel>(width * height)),
+			primaryIsHost(true) {};
 };
 
 
